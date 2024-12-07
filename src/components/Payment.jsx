@@ -7,7 +7,7 @@ const PaymentContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #00000;
 `;
 
 const PaymentCard = styled.div`
@@ -41,7 +41,7 @@ const BackIcon = styled.img`
   height: 20px;
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
   font-size: 20px;
   font-weight: 600;
   color: #333;
@@ -71,7 +71,7 @@ const InputField = styled.input`
   padding: 10px 12px;
   border: 1px solid ${({ error }) => (error ? 'red' : '#ccc')};
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   background-color: #f8f8f8;
 `;
 
