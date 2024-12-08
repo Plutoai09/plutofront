@@ -165,8 +165,9 @@ const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const authCode = localStorage.getItem('authCode');
+    const plutoemail = localStorage.getItem('plutoemail');
     
-    if (authCode !== 'pluto_success') {
+    if (authCode !== 'pluto_success' && !plutoemail) {
       navigate('/login');
     }
   }, []);
@@ -433,7 +434,7 @@ const [duration, setDuration] = useState(0);
     if (audioElement && progressBarRef.current) {
       const progressBar = progressBarRef.current;
       const rect = progressBar.getBoundingClientRect();
-      const seekPosition = (e.clientX - rect.left) / rect.width;
+      const seekPosition = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
       const newTime = seekPosition * duration;
       
       // Update audio time
@@ -452,18 +453,23 @@ const [duration, setDuration] = useState(0);
 
   const handleProgressBarInteraction = (e) => {
     e.preventDefault();
+    
+    // Initial seek
     handleSeek(e);
-
-    // Add event listeners for mouse move and mouse up
+  
+    // Track mouse movements
     const handleMouseMove = (moveEvent) => {
+      moveEvent.preventDefault();
       handleSeek(moveEvent);
     };
-
+  
+    // Handle mouse up to stop dragging
     const handleMouseUp = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-
+  
+    // Add event listeners for continuous dragging
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
@@ -914,35 +920,35 @@ const [duration, setDuration] = useState(0);
         </div>
       ) : (
         <>
-          <div className="flex items-center mt-[3vh]">
-            <span className="text-xs text-gray-500 w-12 text-right">
-              {formatTime(currentTime)}
-            </span>
-            
-            <div
-              ref={progressBarRef}
-              className="flex-grow mx-2 h-2 bg-gray-300 rounded-full cursor-pointer relative"
-              onMouseDown={handleProgressBarInteraction}
-            >
-              <div
-                className="absolute top-0 left-0 h-2 bg-blue-500 rounded-full"
-                style={{ width: `${(currentTime / duration) * 100}%` }}
-              />
-              <div
-                className="absolute left-0 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform hover:scale-125"
-                style={{
-                  top: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  left: `${(currentTime / duration) * 100}%`,
-                  cursor: 'pointer',
-                }}
-              />
-            </div>
-            
-            <span className="text-xs text-gray-500 w-12 text-left">
-              {formatTime(duration)}
-            </span>
-          </div>
+         <div className="flex items-center mt-[3vh]">
+  <span className="text-xs text-gray-500 w-12 text-right">
+    {formatTime(currentTime)}
+  </span>
+  
+  <div
+    ref={progressBarRef}
+    className="flex-grow mx-2 h-4 bg-gray-300 rounded-full cursor-pointer relative"
+    onMouseDown={handleProgressBarInteraction}
+  >
+    <div
+      className="absolute top-0 left-0 h-4 bg-blue-500 rounded-full"
+      style={{ width: `${(currentTime / duration) * 100}%` }}
+    />
+    <div
+      className="absolute left-0 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform hover:scale-110"
+      style={{
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        left: `${(currentTime / duration) * 100}%`,
+        cursor: 'pointer',
+      }}
+    />
+  </div>
+  
+  <span className="text-xs text-gray-500 w-12 text-left">
+    {formatTime(duration)}
+  </span>
+</div>
 
           <div className="flex justify-center items-center space-x-16 mb-1 mt-4">
             <div className="flex flex-col items-center">

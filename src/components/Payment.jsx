@@ -110,8 +110,24 @@ const PayButton = styled.button`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
+// New styled components for loading message
+const LoadingMessage = styled.div`
+  text-align: center;
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;
+`;
+
+const RedirectLink = styled.a`
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 4px;
+`;
+
 const Payment = () => {
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [amount, setAmount] = useState(89);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -168,11 +184,11 @@ const Payment = () => {
       }
 
       // Create order via your backend
-      const { data } = await axios.post('https://plutov505-199193976935.us-east1.run.app/api/create-order', {
-        amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
+      const { data } = await axios.post('https://contractus.co.in/api/create-order', {
+        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
-      console.log(data)
+
       const options = {
         key: 'rzp_live_gC8XrdngTZTdd8', // Replace with your Razorpay Key ID
         amount: data.amount,
@@ -182,10 +198,14 @@ const Payment = () => {
         image: '/public/logo.png',
         order_id: data.id,
         handler: async (response) => {
+          // Set verifying state after payment
+          setLoading(false);
+          setVerifying(true);
+
           try {
             // Verify payment on your backend
             const verifyResponse = await axios.post(
-              'https://plutov505-199193976935.us-east1.run.app/api/verify-payment',
+              'https://contractus.co.in/api/verify-payment',
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -197,10 +217,12 @@ const Payment = () => {
               window.location.href = '/login';
             } else {
               alert('Payment Verification Failed');
+              setVerifying(false);
             }
           } catch (error) {
             alert('Payment Verification Error');
             console.error(error);
+            setVerifying(false);
           }
         },
         prefill: {
@@ -221,7 +243,6 @@ const Payment = () => {
     } catch (error) {
       alert('Error initiating payment');
       console.error(error);
-    } finally {
       setLoading(false);
     }
   };
@@ -247,16 +268,27 @@ const Payment = () => {
   return (
     <PaymentContainer>
       <PaymentCard>
+        {verifying && (
+          <LoadingMessage>
+            You will be redirected soon, if not 
+            <RedirectLink href="https://plutoai.co.in/login">
+              click here
+            </RedirectLink>
+          </LoadingMessage>
+        )}
+        
         <PaymentHeader>
           <BackButton onClick={handleBack}>
             <BackIcon src="/images/back.svg" alt="Back" />
           </BackButton>
           <Title>Payment Details</Title>
         </PaymentHeader>
+        
         <InputContainer>
           <InputLabel>Amount</InputLabel>
           <InputField value={`₹${amount}.00`} disabled />
         </InputContainer>
+        
         <InputContainer>
           <InputLabel>Email</InputLabel>
           <InputField
@@ -268,6 +300,7 @@ const Payment = () => {
           />
           {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
         </InputContainer>
+        
         <InputContainer>
           <InputLabel>Phone</InputLabel>
           <InputField
@@ -279,6 +312,7 @@ const Payment = () => {
           />
           {phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
         </InputContainer>
+        
         <PaymentIcons>
           {paymentIcons.map((icon, index) => (
             <IconWrapper key={index}>
@@ -286,6 +320,7 @@ const Payment = () => {
             </IconWrapper>
           ))}
         </PaymentIcons>
+        
         <PayButton disabled={loading} onClick={handlePayment}>
           {loading ? 'Processing...' : `Pay ₹${amount}.00`}
         </PayButton>
