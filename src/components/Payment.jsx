@@ -69,10 +69,10 @@ const InputLabel = styled.label`
 const InputField = styled.input`
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid ${({ error }) => (error ? 'red' : '#ccc')};
+  border: 1px solid ${({ error, index }) => (error ? 'red' : index === 0 ? '#dae7fc' : '#ccc')};
+  background-color: ${({ index }) => (index === 0 ? '#fcfdff' : '#f8f8f8')};
   border-radius: 4px;
   font-size: 14px;
-  background-color: #f8f8f8;
 `;
 
 const PaymentIcons = styled.div`
@@ -285,9 +285,9 @@ const Payment = () => {
         </PaymentHeader>
         
         <InputContainer>
-          <InputLabel>Amount</InputLabel>
-          <InputField value={`₹${amount}.00`} disabled />
-        </InputContainer>
+  <InputLabel>Amount</InputLabel>
+  <InputField value={`₹${amount}.00`} disabled index={0} />
+</InputContainer>
         
         <InputContainer>
           <InputLabel>Email</InputLabel>
