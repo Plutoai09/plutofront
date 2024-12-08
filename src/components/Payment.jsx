@@ -86,8 +86,8 @@ const IconWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 24px;
+  width: 76px;
+  height: 36px;
   margin: 0 8px;
 `;
 
@@ -168,7 +168,7 @@ const Payment = () => {
       }
 
       // Create order via your backend
-      const { data } = await axios.post('http://127.0.0.1:5000/api/create-order', {
+      const { data } = await axios.post('https://plutov505-199193976935.us-east1.run.app/api/create-order', {
         amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
@@ -185,7 +185,7 @@ const Payment = () => {
           try {
             // Verify payment on your backend
             const verifyResponse = await axios.post(
-              'http://127.0.0.1:5000/api/verify-payment',
+              'https://plutov505-199193976935.us-east1.run.app/api/verify-payment',
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
