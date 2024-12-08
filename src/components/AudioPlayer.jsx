@@ -428,13 +428,19 @@ const [duration, setDuration] = useState(0);
 
 
 
+  
   const progressBarRef = useRef(null);
 
-  const handleSeek = (e) => {
+  const handleSeek = (event) => {
     if (audioElement && progressBarRef.current) {
+      // Support both mouse and touch events
+      const clientX = event.clientX || (event.touches && event.touches[0].clientX);
+      
+      if (!clientX) return;
+
       const progressBar = progressBarRef.current;
       const rect = progressBar.getBoundingClientRect();
-      const seekPosition = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const seekPosition = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       const newTime = seekPosition * duration;
       
       // Update audio time
@@ -452,32 +458,32 @@ const [duration, setDuration] = useState(0);
   };
 
   const handleProgressBarInteraction = (e) => {
+    // Prevent default to stop text selection or scrolling
     e.preventDefault();
     
     // Initial seek
     handleSeek(e);
   
-    // Track mouse movements
+    // Track mouse/touch movements
     const handleMouseMove = (moveEvent) => {
       moveEvent.preventDefault();
       handleSeek(moveEvent);
     };
   
-    // Handle mouse up to stop dragging
-    const handleMouseUp = () => {
+    // Handle mouse/touch up to stop dragging
+    const handleMouseUp = (upEvent) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleMouseMove);
+      document.removeEventListener('touchend', handleMouseUp);
     };
   
-    // Add event listeners for continuous dragging
+    // Add event listeners for continuous dragging (mouse and touch)
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleMouseMove, { passive: false });
+    document.addEventListener('touchend', handleMouseUp, { passive: false });
   };
-
-
-
-
-
 
 
   const playAfterAnswerAudio = () => {
@@ -920,35 +926,39 @@ const [duration, setDuration] = useState(0);
         </div>
       ) : (
         <>
-         <div className="flex items-center mt-[3vh]">
-  <span className="text-xs text-gray-500 w-12 text-right">
-    {formatTime(currentTime)}
-  </span>
-  
-  <div
-    ref={progressBarRef}
-    className="flex-grow mx-2 h-4 bg-gray-300 rounded-full cursor-pointer relative"
-    onMouseDown={handleProgressBarInteraction}
-  >
-    <div
-      className="absolute top-0 left-0 h-4 bg-blue-500 rounded-full"
-      style={{ width: `${(currentTime / duration) * 100}%` }}
-    />
-    <div
-      className="absolute left-0 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform hover:scale-110"
-      style={{
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        left: `${(currentTime / duration) * 100}%`,
-        cursor: 'pointer',
-      }}
-    />
-  </div>
-  
-  <span className="text-xs text-gray-500 w-12 text-left">
-    {formatTime(duration)}
-  </span>
-</div>
+     
+
+     <div className="flex items-center mt-[3vh]">
+      <span className="text-xs text-gray-500 w-12 text-right">
+        {formatTime(currentTime)}
+      </span>
+      
+      <div
+        ref={progressBarRef}
+        className="flex-grow mx-2 h-2 bg-gray-300 rounded-full cursor-pointer relative"
+        onMouseDown={handleProgressBarInteraction}
+        onTouchStart={handleProgressBarInteraction}
+      >
+        <div
+          className="absolute top-0 left-0 h-2 bg-blue-500 rounded-full"
+          style={{ width: `${(currentTime / duration) * 100}%` }}
+        />
+        <div
+          className="absolute left-0 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform hover:scale-110"
+          style={{
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            left: `${(currentTime / duration) * 100}%`,
+            cursor: 'pointer',
+          }}
+        />
+      </div>
+      
+      <span className="text-xs text-gray-500 w-12 text-left">
+        {formatTime(duration)}
+      </span>
+    </div>
+    
 
           <div className="flex justify-center items-center space-x-16 mb-1 mt-4">
             <div className="flex flex-col items-center">
