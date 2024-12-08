@@ -145,7 +145,7 @@ const Payment = () => {
   };
 
   const handleBack = () => {
-    window.location.href = 'https://getpluto.in';
+    window.location.href = 'https://getpluto.in/artofconversation/payment';
   };
 
   const handlePayment = async () => {
