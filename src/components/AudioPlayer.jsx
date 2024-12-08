@@ -935,12 +935,12 @@ const [duration, setDuration] = useState(0);
       
       <div
         ref={progressBarRef}
-        className="flex-grow mx-2 h-2 bg-gray-300 rounded-full cursor-pointer relative"
+        className="flex-grow mx-2 h-3 bg-gray-300 rounded-full cursor-pointer relative"
         onMouseDown={handleProgressBarInteraction}
         onTouchStart={handleProgressBarInteraction}
       >
         <div
-          className="absolute top-0 left-0 h-2 bg-blue-500 rounded-full"
+          className="absolute top-0 left-0 h-3 bg-blue-500 rounded-full"
           style={{ width: `${(currentTime / duration) * 100}%` }}
         />
         <div
@@ -958,7 +958,7 @@ const [duration, setDuration] = useState(0);
         {formatTime(duration)}
       </span>
     </div>
-    
+
 
           <div className="flex justify-center items-center space-x-16 mb-1 mt-4">
             <div className="flex flex-col items-center">
