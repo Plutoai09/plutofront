@@ -139,8 +139,8 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-xs text-maroon-600 text-center mt-4" style={{ color: '#800000' }}>
-          Password has been sent on your email address from pluto@plutoai.co.in
+        <p className="text-sm text-maroon-600 text-center mt-4" style={{ color: '#800000' }}>
+          Passcode has been sent to your email address by sender : pluto@plutoai.co.in
         </p>
       </div>
 
