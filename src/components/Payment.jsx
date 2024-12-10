@@ -110,7 +110,6 @@ const PayButton = styled.button`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
-// New styled components for loading message
 const LoadingMessage = styled.div`
   text-align: center;
   margin-bottom: 16px;
@@ -148,27 +147,37 @@ const Payment = () => {
     window.location.href = 'https://getpluto.in/artofconversation/payment';
   };
 
-  const handlePayment = async () => {
-    // Reset previous errors
-    setEmailError('');
-    setPhoneError('');
+  const validateForm = () => {
+    let isValid = true;
 
     // Validate email
     if (!email) {
       setEmailError('Email is required');
+      isValid = false;
     } else if (!validateEmail(email)) {
       setEmailError('Please enter a valid email');
+      isValid = false;
+    } else {
+      setEmailError('');
     }
 
     // Validate phone
     if (!phone) {
       setPhoneError('Phone number is required');
+      isValid = false;
     } else if (!validatePhone(phone)) {
       setPhoneError('Please enter a valid 10-digit phone number');
+      isValid = false;
+    } else {
+      setPhoneError('');
     }
 
-    // Check if there are any validation errors
-    if (!email || !phone || !validateEmail(email) || !validatePhone(phone)) {
+    return isValid;
+  };
+
+  const handlePayment = async () => {
+    // Validate form
+    if (!validateForm()) {
       return;
     }
 
@@ -185,7 +194,7 @@ const Payment = () => {
 
       // Create order via your backend
       const { data } = await axios.post('https://contractus.co.in/api/create-order', {
-        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
+        amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
 
@@ -214,7 +223,25 @@ const Payment = () => {
             );
 
             if (verifyResponse.data.success) {
-              window.location.href = '/login';
+              // Create Razorpay customer after successful payment verification
+              try {
+                const customerResponse = await axios.post(
+                  'https://contractus.co.in/api/create-customer',
+                  {
+                    email: email,
+                    contact: phone,
+                    payment_id: response.razorpay_payment_id,
+                    order_id: response.razorpay_order_id
+                  }
+                );
+
+                // Redirect to login after successful customer creation
+                window.location.href = '/login';
+              } catch (customerError) {
+                console.error('Customer Creation Error:', customerError);
+                alert('Payment Successful, but Customer Creation Failed');
+                window.location.href = '/login'; // Still redirect even if customer creation fails
+              }
             } else {
               alert('Payment Verification Failed');
               setVerifying(false);
@@ -226,7 +253,6 @@ const Payment = () => {
           }
         },
         prefill: {
-          name: 'Customer Name',
           email: email,
           contact: phone,
         },
@@ -285,9 +311,9 @@ const Payment = () => {
         </PaymentHeader>
         
         <InputContainer>
-  <InputLabel>Amount</InputLabel>
-  <InputField value={`₹${amount}.00`} disabled index={0} />
-</InputContainer>
+          <InputLabel>Amount</InputLabel>
+          <InputField value={`₹${amount}.00`} disabled index={0} />
+        </InputContainer>
         
         <InputContainer>
           <InputLabel>Email</InputLabel>
