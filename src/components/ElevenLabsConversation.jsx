@@ -7,6 +7,7 @@ const ElevenLabsConversation = () => {
   const [isActive, setIsActive] = useState(false);
   const [isCleaningUp, setIsCleaningUp] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef(null);
   const hasGreeted = useRef(false);
 
@@ -39,6 +40,17 @@ const ElevenLabsConversation = () => {
   });
 
   const { status, isSpeaking } = conversation;
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadeddata', () => {
+        setIsVideoLoaded(true);
+      });
+
+      // Preload the video
+      videoRef.current.load();
+    }
+  }, []);
 
   const handleCleanup = () => {
     setIsCleaningUp(true);
@@ -95,13 +107,17 @@ const ElevenLabsConversation = () => {
         <div className="flex gap-4">
           <div className="relative w-16 h-16">
             <div className="absolute inset-0 rounded-full overflow-hidden">
+              {!isVideoLoaded && (
+                <div className="w-full h-full bg-gray-200 animate-pulse rounded-full"></div>
+              )}
               <video
                 ref={videoRef}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${!isVideoLoaded ? 'hidden' : ''}`}
                 loop
                 muted
                 playsInline
                 autoPlay
+                preload="metadata"
                 src="/videos/circle-animation.mp4"
                 style={{
                   maskImage: 'radial-gradient(circle, black 70%, transparent 70%)',

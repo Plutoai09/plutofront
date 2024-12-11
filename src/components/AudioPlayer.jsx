@@ -820,18 +820,21 @@ const [duration, setDuration] = useState(0);
                     : ""
                 }`}
               />
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 ${
-                  isAnswerPlaying ? "filter blur-sm" : ""
-                }`}
-              >
-                <source src="/videos/bg.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+            <video
+  autoPlay
+  loop
+  muted
+  playsInline
+  preload="auto"
+  poster="/images/bg.png"  // Add a poster image that looks similar to the video
+  className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 ${
+    isAnswerPlaying ? "filter blur-sm" : ""
+  }`}
+>
+  <source src="/videos/bg.mp4" type="video/mp4" />
+  <source src="/videos/bg.webm" type="video/webm" /> 
+  Your browser does not support the video tag.
+</video>
               <div
                 className={`absolute inset-0 bg-black transition-opacity duration-300 ${
                   isAnswerPlaying ? "opacity-30" : "opacity-0"
