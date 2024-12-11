@@ -118,6 +118,7 @@ const ElevenLabsConversation = () => {
                 playsInline
                 autoPlay
                 preload="metadata"
+                poster="/images/icon.png" 
                 src="/videos/circle-animation.mp4"
                 style={{
                   maskImage: 'radial-gradient(circle, black 70%, transparent 70%)',

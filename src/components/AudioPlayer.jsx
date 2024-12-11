@@ -784,13 +784,7 @@ const [duration, setDuration] = useState(0);
           >
           <div className="relative w-16 h-16 sm:w-20 sm:h-20">
 
-              <div className="w-full h-full rounded-full overflow-hidden border-2 border-white shadow-lg">
-                <img
-                  src={authorImageSrc || "/api/placeholder/96/96"}
-                  alt="Author"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+             
               {isAnswerPlaying &&
                 rippleElements.map((ripple, index) => (
                   <div
