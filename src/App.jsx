@@ -6,6 +6,7 @@ import ConversationInterface from "./components/ConversationInterface";
 import Login from "./components/Login";
 import ElevenLabsWidget from "./components/ElevenLabsWidget";
 import SandeepMaheshwari from "./components/SandeepMaheshwari";
+import Checkout from "./components/Checkout";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         <Route path="/artofconversation" element={<AudioPlayer />} />
         <Route path="/SandeepMaheshwari" element={<SandeepMaheshwari />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/checkout" element={<PaymentAOC />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );
