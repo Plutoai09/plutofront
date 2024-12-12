@@ -3,17 +3,18 @@ import { useConversation } from '@11labs/react';
 import { PhoneCall, XCircle, Mic } from 'lucide-react';
 
 const ElevenLabsConversation = () => {
-  const [isMicAllowed, setIsMicAllowed] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [isCleaningUp, setIsCleaningUp] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef(null);
   const hasGreeted = useRef(false);
+  const isAttemptingConnection = useRef(false);
 
   const conversation = useConversation({
     onConnect: async () => {
       console.log('Connected to ElevenLabs');
+      isAttemptingConnection.current = false;
+      
       if (isActive && !hasGreeted.current) {
         hasGreeted.current = true;
         try {
@@ -22,19 +23,23 @@ const ElevenLabsConversation = () => {
           console.error('Failed to send greeting:', error);
         }
       }
+      
+      setIsInitializing(false);
     },
     onDisconnect: () => {
       console.log('Disconnected from ElevenLabs');
       hasGreeted.current = false;
+      isAttemptingConnection.current = false;
       handleCleanup();
-    },
-    onMessage: (message) => {
-      console.log('Received message:', message);
     },
     onError: (error) => {
       console.error('ElevenLabs error:', error);
+      console.error('Detailed error:', error);
+      
       hasGreeted.current = false;
+      isAttemptingConnection.current = false;
       setIsActive(false);
+      setIsInitializing(false);
       handleCleanup();
     },
   });
@@ -46,8 +51,6 @@ const ElevenLabsConversation = () => {
       videoRef.current.addEventListener('loadeddata', () => {
         setIsVideoLoaded(true);
       });
-
-      // Preload the video
       videoRef.current.load();
     }
   }, []);
@@ -61,6 +64,13 @@ const ElevenLabsConversation = () => {
   };
 
   const handleToggleCall = async () => {
+    // Prevent multiple simultaneous connection attempts
+    if (isAttemptingConnection.current) {
+      console.log('Connection attempt already in progress');
+      return;
+    }
+
+    // If already active, end the session
     if (isActive) {
       try {
         hasGreeted.current = false;
@@ -74,18 +84,35 @@ const ElevenLabsConversation = () => {
     }
 
     try {
-      // Request mic permission using default browser popup
+      // Prevent multiple connection attempts
+      isAttemptingConnection.current = true;
+
+      // Request mic permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
       setIsInitializing(true);
       setIsActive(true);
+
+      // Add a timeout for connection
+      const connectionTimeout = setTimeout(() => {
+        console.error('Connection timed out');
+        isAttemptingConnection.current = false;
+        setIsInitializing(false);
+        setIsActive(false);
+        handleCleanup();
+      }, 10000); // 10 seconds timeout
+
       const conversationId = await conversation.startSession({
         agentId: 'umP5JikAvglm8gLnDqcc',
       });
+
+      // Clear the timeout if successful
+      clearTimeout(connectionTimeout);
+
       console.log('Started conversation with ID:', conversationId);
-      setIsInitializing(false);
     } catch (error) {
       console.error('Failed to start conversation:', error);
+      isAttemptingConnection.current = false;
       setIsActive(false);
       setIsInitializing(false);
       handleCleanup();
@@ -107,7 +134,6 @@ const ElevenLabsConversation = () => {
         <div className="flex gap-4">
           <div className="relative w-16 h-16">
             <div className="absolute inset-0 rounded-full overflow-hidden">
-             
               <video
                 ref={videoRef}
                 loop
@@ -116,8 +142,7 @@ const ElevenLabsConversation = () => {
                 autoPlay
                 preload="metadata"
                 poster="/images/icon.png" 
-                src="/videos/circle-animaion.mp4"
-             
+                src="/videos/circle-animatin.mp4"
               />
             </div>
           </div>

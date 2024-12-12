@@ -5,6 +5,7 @@ import PaymentAOC from "./components/PaymentAOC";
 import ConversationInterface from "./components/ConversationInterface";
 import Login from "./components/Login";
 import ElevenLabsWidget from "./components/ElevenLabsWidget";
+import SandeepMaheshwari from "./components/SandeepMaheshwari";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/interact" element={<ElevenLabsWidget />} />
         <Route path="/artofconversation" element={<AudioPlayer />} />
+        <Route path="/SandeepMaheshwari" element={<SandeepMaheshwari />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/checkout" element={<PaymentAOC />} />
       </Routes>
