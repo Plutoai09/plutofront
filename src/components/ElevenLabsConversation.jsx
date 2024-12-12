@@ -96,7 +96,7 @@ const ElevenLabsConversation = () => {
 
   const getStatusText = () => {
     if (isInitializing) return 'Initializing...';
-    if (!isConnected) return 'AI Powered Tips';
+    if (!isConnected) return 'Interact with Audiobook';
     if (isSpeaking) return 'Talking...';
     return 'Listening...';
   };
@@ -107,23 +107,17 @@ const ElevenLabsConversation = () => {
         <div className="flex gap-4">
           <div className="relative w-16 h-16">
             <div className="absolute inset-0 rounded-full overflow-hidden">
-              {!isVideoLoaded && (
-                <div className="w-full h-full bg-gray-200 animate-pulse rounded-full"></div>
-              )}
+             
               <video
                 ref={videoRef}
-                className={`w-full h-full object-cover ${!isVideoLoaded ? 'hidden' : ''}`}
                 loop
                 muted
                 playsInline
                 autoPlay
                 preload="metadata"
                 poster="/images/icon.png" 
-                src="/videos/circle-animation.mp4"
-                style={{
-                  maskImage: 'radial-gradient(circle, black 70%, transparent 70%)',
-                  WebkitMaskImage: 'radial-gradient(circle, black 70%, transparent 70%)',
-                }}
+                src="/videos/circle-animaion.mp4"
+             
               />
             </div>
           </div>
