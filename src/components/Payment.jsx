@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -133,6 +133,40 @@ const Payment = () => {
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
 
+  // Load Meta Pixel on component mount
+  useEffect(() => {
+    // Load Meta Pixel script
+    const script = document.createElement('script');
+    script.innerHTML = `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '880327287611463');
+      fbq('track', 'PageView');
+    `;
+    document.head.appendChild(script);
+
+    // Add no-script image
+    const noscript = document.createElement('noscript');
+    noscript.innerHTML = `
+      <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=880327287611463&ev=PageView&noscript=1"
+      />
+    `;
+    document.body.appendChild(noscript);
+
+    // Cleanup function
+    return () => {
+      document.head.removeChild(script);
+      document.body.removeChild(noscript);
+    };
+  }, []);
+
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
@@ -181,6 +215,15 @@ const Payment = () => {
       return;
     }
 
+    // Track InitiateCheckout event
+    if (window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
+        value: 89,
+        currency: 'INR',
+        content_type: 'product'
+      });
+    }
+
     setLoading(true);
 
     try {
@@ -194,7 +237,7 @@ const Payment = () => {
 
       // Create order via your backend
       const { data } = await axios.post('https://contractus.co.in/api/create-order', {
-        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
+        amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
 
@@ -207,6 +250,15 @@ const Payment = () => {
         image: '/public/logo.png',
         order_id: data.id,
         handler: async (response) => {
+          // Track Purchase event
+          if (window.fbq) {
+            window.fbq('track', 'Purchase', {
+              value: 89,
+              currency: 'INR',
+              content_type: 'product'
+            });
+          }
+
           // Set verifying state after payment
           setLoading(false);
           setVerifying(true);
