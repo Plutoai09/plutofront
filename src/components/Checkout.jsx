@@ -237,7 +237,7 @@ const Checkout = () => {
 
       // Create order via your backend
       const { data } = await axios.post('https://contractus.co.in/api/create-order', {
-        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
+        amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
 
