@@ -127,7 +127,7 @@ const RedirectLink = styled.a`
 const Payment = () => {
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  const [amount, setAmount] = useState(89);
+  const [amount, setAmount] = useState(79);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -218,7 +218,7 @@ const Payment = () => {
     // Track InitiateCheckout event
     if (window.fbq) {
       window.fbq('track', 'InitiateCheckout', {
-        value: 89,
+        value: 79,
         currency: 'INR',
         content_type: 'product'
       });
@@ -237,7 +237,7 @@ const Payment = () => {
 
       // Create order via your backend
       const { data } = await axios.post('https://contractus.co.in/api/create-order', {
-        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
+        amount: 7900, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
 
@@ -253,7 +253,7 @@ const Payment = () => {
           // Track Purchase event
           if (window.fbq) {
             window.fbq('track', 'Purchase', {
-              value: 89,
+              value: 79,
               currency: 'INR',
               content_type: 'product'
             });
