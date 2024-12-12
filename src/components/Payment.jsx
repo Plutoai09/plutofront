@@ -149,7 +149,6 @@ const Payment = () => {
       fbq('init', '880327287611463');
       fbq('track', 'PageView');
     `;
-    script.async = true;
     document.head.appendChild(script);
 
     // Add no-script image
@@ -216,6 +215,15 @@ const Payment = () => {
       return;
     }
 
+    // Track InitiateCheckout event
+    if (window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
+        value: 89,
+        currency: 'INR',
+        content_type: 'product'
+      });
+    }
+
     setLoading(true);
 
     try {
@@ -229,7 +237,7 @@ const Payment = () => {
 
       // Create order via your backend
       const { data } = await axios.post('https://contractus.co.in/api/create-order', {
-        amount: 8900, // Amount in paise (e.g., 1000 paise = ₹10)
+        amount: 200, // Amount in paise (e.g., 1000 paise = ₹10)
         currency: 'INR'
       });
 
@@ -242,6 +250,15 @@ const Payment = () => {
         image: '/public/logo.png',
         order_id: data.id,
         handler: async (response) => {
+          // Track Purchase event
+          if (window.fbq) {
+            window.fbq('track', 'Purchase', {
+              value: 89,
+              currency: 'INR',
+              content_type: 'product'
+            });
+          }
+
           // Set verifying state after payment
           setLoading(false);
           setVerifying(true);
@@ -271,11 +288,11 @@ const Payment = () => {
                 );
 
                 // Redirect to login after successful customer creation
-                window.location.href = 'https://getpluto.in/success';
+                window.location.href = '/login';
               } catch (customerError) {
                 console.error('Customer Creation Error:', customerError);
                 alert('Payment Successful, but Customer Creation Failed');
-                window.location.href = 'https://getpluto.in/success'; // Still redirect even if customer creation fails
+                window.location.href = '/login'; // Still redirect even if customer creation fails
               }
             } else {
               alert('Payment Verification Failed');
@@ -332,7 +349,7 @@ const Payment = () => {
         {verifying && (
           <LoadingMessage>
             You will be redirected soon, if not 
-            <RedirectLink href="https://getpluto.in/success">
+            <RedirectLink href="https://plutoai.co.in/login">
               click here
             </RedirectLink>
           </LoadingMessage>
