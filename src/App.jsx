@@ -1,12 +1,17 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AudioPlayer from "./components/AudioPlayer";
 import Payment from "./components/Payment";
-import PaymentAOC from "./components/PaymentAOC";
+import Aboutus from "./components/Aboutus";
 import ConversationInterface from "./components/ConversationInterface";
 import Login from "./components/Login";
 import ElevenLabsWidget from "./components/ElevenLabsWidget";
 import SandeepMaheshwari from "./components/SandeepMaheshwari";
 import Checkout from "./components/Checkout";
+import TnC from "./components/TnC";
+import Privacy from "./components/Privacy";
+import Homepage from "./components/Homepage";
+import Contact from "./components/contact";
+import Refund from "./components/refund";
 
 function App() {
   return (
@@ -20,6 +25,12 @@ function App() {
         <Route path="/SandeepMaheshwari" element={<SandeepMaheshwari />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/aboutus" element={<Aboutus />} />
+        <Route path="/terms" element={<TnC />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/home" element={<Homepage />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/refund" element={<Refund />} />
       </Routes>
     </Router>
   );
