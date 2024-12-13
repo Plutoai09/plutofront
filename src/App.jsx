@@ -17,7 +17,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AudioPlayer />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/update" element={<ConversationInterface />} />
         <Route path="/login" element={<Login />} />
         <Route path="/interact" element={<ElevenLabsWidget />} />
