@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 
 const SandeepMaheshwari = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -9,7 +8,7 @@ const SandeepMaheshwari = () => {
     const delphiPageScript = document.createElement('script');
     delphiPageScript.id = 'delphi-page-script';
     delphiPageScript.innerHTML = `
-      window.delphi = {...(window.delphi ?? {}) };
+      window.delphi = {...(window.delphi ?? {})};
       window.delphi.page = {
         config: "62c8cc36-65c2-452e-9161-acccf764ebb4",
         overrides: {
@@ -28,17 +27,13 @@ const SandeepMaheshwari = () => {
     delphiBootstrapScript.id = 'delphi-page-bootstrap';
     delphiBootstrapScript.src = "https://embed.delphi.ai/loader.js";
     
-    // Add onload and onerror handlers to manage loading state
+    // Add load and error event listeners to handle loading state
     delphiBootstrapScript.onload = () => {
-      // Wait a bit to ensure Delphi is fully initialized
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    };
-    
-    delphiBootstrapScript.onerror = () => {
-      console.error('Failed to load Delphi integration');
       setIsLoading(false);
+    };
+    delphiBootstrapScript.onerror = () => {
+      setIsLoading(false);
+      console.error('Failed to load Delphi script');
     };
 
     document.body.appendChild(delphiBootstrapScript);
@@ -47,41 +42,69 @@ const SandeepMaheshwari = () => {
     return () => {
       const existingPageScript = document.getElementById('delphi-page-script');
       const existingBootstrapScript = document.getElementById('delphi-page-bootstrap');
-      
+
       if (existingPageScript) {
         document.body.removeChild(existingPageScript);
       }
-      
+
       if (existingBootstrapScript) {
         document.body.removeChild(existingBootstrapScript);
       }
     };
   }, []); // Empty dependency array means this effect runs once on mount
 
-  // Loading screen component
-  const LoadingScreen = () => (
-    <div className="flex items-center justify-center w-full h-90vh">
-      <div className="flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
-        <p className="text-lg text-gray-600">Loading Delphi Integration...</p>
+  if (isLoading) {
+    return (
+      <div 
+        style={{ 
+          width: '100%', 
+          height: '90vh', 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          backgroundColor: '#f0f0f0' 
+        }}
+      >
+        <div 
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center'
+          }}
+        >
+          <div 
+            style={{
+              width: '50px',
+              height: '50px',
+              border: '4px solid #f3f3f3',
+              borderTop: '4px solid #3498db',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }}
+          />
+          <p style={{ marginTop: '15px', color: '#333' }}>
+            Loading Sandeep AI...
+          </p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <>
-      {isLoading ? (
-        <LoadingScreen />
-      ) : (
-        <div 
-          id="delphi-container" 
-          style={{ 
-            width: '100%', 
-            height: '90vh' 
-          }} 
-        />
-      )}
-    </>
+    <div 
+      id="delphi-container" 
+      style={{ 
+        width: '100%', 
+        height: '90vh' 
+      }} 
+    />
   );
 };
 
