@@ -178,7 +178,7 @@ const Checkout = () => {
   };
 
   const handleBack = () => {
-    window.location.href = 'https://getpluto.in/artofconversation/payment';
+    window.location.href = 'https://getpluto.in/success';
   };
 
   const validateForm = () => {
