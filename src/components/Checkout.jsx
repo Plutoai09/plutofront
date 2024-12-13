@@ -288,11 +288,11 @@ const Checkout = () => {
                 );
 
                 // Redirect to login after successful customer creation
-                window.location.href = '/login';
+                window.location.href = 'https://getpluto.in/success';
               } catch (customerError) {
                 console.error('Customer Creation Error:', customerError);
                 alert('Payment Successful, but Customer Creation Failed');
-                window.location.href = '/login'; // Still redirect even if customer creation fails
+                window.location.href = 'https://getpluto.in/success'; // Still redirect even if customer creation fails
               }
             } else {
               alert('Payment Verification Failed');
@@ -349,7 +349,7 @@ const Checkout = () => {
         {verifying && (
           <LoadingMessage>
             You will be redirected soon, if not 
-            <RedirectLink href="https://plutoai.co.in/login">
+            <RedirectLink href="https://getpluto.in/success">
               click here
             </RedirectLink>
           </LoadingMessage>
