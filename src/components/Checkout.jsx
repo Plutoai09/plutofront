@@ -133,11 +133,11 @@ const Checkout = () => {
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
 
-  // Load Meta Pixel on component mount
+  // Load Meta Pixel and Google Tag Manager on component mount
   useEffect(() => {
     // Load Meta Pixel script
-    const script = document.createElement('script');
-    script.innerHTML = `
+    const metaPixelScript = document.createElement('script');
+    metaPixelScript.innerHTML = `
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -149,21 +149,38 @@ const Checkout = () => {
       fbq('init', '552055977545898');
       fbq('track', 'PageView');
     `;
-    document.head.appendChild(script);
+    document.head.appendChild(metaPixelScript);
 
-    // Add no-script image
-    const noscript = document.createElement('noscript');
-    noscript.innerHTML = `
+    // Add Meta Pixel no-script image
+    const metaPixelNoscript = document.createElement('noscript');
+    metaPixelNoscript.innerHTML = `
       <img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=552055977545898&ev=PageView&noscript=1"
       />
     `;
-    document.body.appendChild(noscript);
+    document.body.appendChild(metaPixelNoscript);
+
+    // Load Google Tag Manager script
+    const googleTagScript = document.createElement('script');
+    googleTagScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16640961970';
+    googleTagScript.async = true;
+    document.head.appendChild(googleTagScript);
+
+    const googleTagManagerScript = document.createElement('script');
+    googleTagManagerScript.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-16640961970');
+    `;
+    document.head.appendChild(googleTagManagerScript);
 
     // Cleanup function
     return () => {
-      document.head.removeChild(script);
-      document.body.removeChild(noscript);
+      document.head.removeChild(metaPixelScript);
+      document.body.removeChild(metaPixelNoscript);
+      document.head.removeChild(googleTagScript);
+      document.head.removeChild(googleTagManagerScript);
     };
   }, []);
 
@@ -224,6 +241,14 @@ const Checkout = () => {
       });
     }
 
+    // Track Google Tag Manager event
+    if (window.gtag) {
+      window.gtag('event', 'begin_checkout', {
+        'value': 89,
+        'currency': 'INR'
+      });
+    }
+
     setLoading(true);
 
     try {
@@ -250,12 +275,21 @@ const Checkout = () => {
         image: '/public/logo.png',
         order_id: data.id,
         handler: async (response) => {
-          // Track Purchase event
+          // Track Purchase event for Meta Pixel
           if (window.fbq) {
             window.fbq('track', 'Purchase', {
               value: 89,
               currency: 'INR',
               content_type: 'product'
+            });
+          }
+
+          // Track Purchase event for Google Tag Manager
+          if (window.gtag) {
+            window.gtag('event', 'purchase', {
+              'transaction_id': response.razorpay_order_id,
+              'value': 89,
+              'currency': 'INR'
             });
           }
 
