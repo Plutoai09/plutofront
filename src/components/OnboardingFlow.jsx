@@ -83,7 +83,7 @@ const OnboardingFlow = () => {
       // Save the persona from the response with the token name 'persona'
       localStorage.setItem('persona', responseData.persona);
   
-      await new Promise(resolve => setTimeout(resolve, 4000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       navigate('/artofconversation');
     } catch (error) {

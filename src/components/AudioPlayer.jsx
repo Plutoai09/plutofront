@@ -174,14 +174,27 @@ const [duration, setDuration] = useState(0);
 
 
 
+  const preloadImages = (imageSrcs) => {
+    return Promise.all(
+      imageSrcs.map(
+        (src) =>
+          new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(src);
+            img.onerror = () => {
+              console.warn(`Failed to load image: ${src}`);
+              resolve(src); // Still resolve to not block loading
+            };
+            img.src = src;
+          })
+      )
+    );
+  };
+
 
   useEffect(() => {
-
-  
-
     const fetchAudiobook = async () => {
       try {
-
         const personaToken = localStorage.getItem('persona')?.toLowerCase();
         console.log(personaToken)
    
@@ -210,10 +223,7 @@ const [duration, setDuration] = useState(0);
           throw new Error("Failed to fetch audiobook");
         }
 
-
-
         const data = await response.json();
-
 
         const updatedChapters = data.chapters.map(chapter => ({
           ...chapter,
@@ -223,7 +233,6 @@ const [duration, setDuration] = useState(0);
           )
         }));
 
-
         console.log(data)
         if (data.chapters && data.chapters.length > 0) {
           setAudioSrc(data.chapters[0].url);
@@ -231,8 +240,15 @@ const [duration, setDuration] = useState(0);
           throw new Error("No chapters found in the response");
         }
 
+        // Preload critical images before setting isLoading to false
+        const imagesToPreload = [
+          data.imageSrc,
+          data.authorImageSrc,
+          "/images/bg.png",
+          "/images/bg.png" // Preload video as well
+        ].filter(Boolean);
 
-
+        await preloadImages(imagesToPreload);
 
         setImageSrc(data.imageSrc);
         setAuthorImageSrc(data.authorImageSrc);
@@ -244,11 +260,16 @@ const [duration, setDuration] = useState(0);
         console.error("Error fetching audiobook:", error);
         setError("Failed to load audiobook. Please try again.");
       } finally {
+        // Set isLoading to false only after all critical assets are loaded
         setIsLoading(false);
       }
     };
+    
     fetchAudiobook();
   }, [name, bookName]);
+
+
+
 
   useEffect(() => {
     if (audioSrc) {
