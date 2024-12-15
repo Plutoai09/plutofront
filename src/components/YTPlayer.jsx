@@ -874,13 +874,13 @@ const [duration, setDuration] = useState(0);
           {/* Controls Section */}
           <div className="px-2 mt-4">
   <div className="flex justify-between items-center">
-    <h2 className="text-xl font-semibold text-gray-800">Art of Content Creation</h2>
+    <h2 className="text-lg font-semibold text-gray-800">Art of Content Creation</h2>
     <div 
       onClick={() => window.location.href = "https://wa.link/tzl6b6"}
       className="cursor-pointer px-2 py-1 rounded-full flex items-center justify-center"
       style={{ backgroundColor: '#002244' }}
     >
-      <span className="text-[10px] text-white">Report an issue</span>
+      <span className="text-[10px] text-white">Report bug</span>
     </div>
   </div>
   <p className="text-sm text-gray-500">Interactive Audiobook</p>
