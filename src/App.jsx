@@ -12,6 +12,8 @@ import Privacy from "./components/Privacy";
 import Homepage from "./components/Homepage";
 import Contact from "./components/contact";
 import Refund from "./components/refund";
+import YTPlayer from "./components/YTPlayer";
+import Loginyt from "./components/Loginyt";
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/update" element={<ConversationInterface />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Loginyt />} />
         <Route path="/interact" element={<ElevenLabsWidget />} />
         <Route path="/artofconversation" element={<AudioPlayer />} />
         <Route path="/SandeepMaheshwari" element={<SandeepMaheshwari />} />
@@ -31,6 +34,7 @@ function App() {
         <Route path="/home" element={<Homepage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/refund" element={<Refund />} />
+        <Route path="/youtube" element={<YTPlayer />} />
       </Routes>
     </Router>
   );
