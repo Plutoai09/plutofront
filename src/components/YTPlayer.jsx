@@ -81,7 +81,7 @@ const YTPlayer = () => {
   const name = "user"
   const [bookName, setBookName] = useState("ArtofCreation");
 
-  const Name = "ArtOfCreation"
+  const Name = "ArtofCreation"
   // Group all useState declarations together
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -197,13 +197,13 @@ const [duration, setDuration] = useState(0);
       try {
      
    
-        let updatedBookName = bookName; // Default to existing bookName
+        let updatedBookName = "ArtofCreation"; // Default to existing bookName
 
       
     
         // Update the bookName state if it changed
         console.log(updatedBookName)
-
+        console.log(name)
         const response = await fetch("https://contractus.co.in/api/audiobook", {
           method: "POST",
           headers: {
@@ -218,13 +218,7 @@ const [duration, setDuration] = useState(0);
 
         const data = await response.json();
 
-        const updatedChapters = data.chapters.map(chapter => ({
-          ...chapter,
-          url: chapter.url.replace(
-            'https://contractus.co.in/audiobook/', 
-            'https://music-chi-lac-43.vercel.app/'
-          )
-        }));
+    
 
         console.log(data)
         if (data.chapters && data.chapters.length > 0) {
