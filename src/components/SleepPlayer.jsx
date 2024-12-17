@@ -838,7 +838,7 @@ const [duration, setDuration] = useState(0);
                 <span className="text-[10px] text-white">Report bug</span>
               </div>
             </div>
-            <p className="text-sm text-gray-300">Interactive Audiobook</p>
+            <p className="text-sm text-gray-300">Sleep Stories</p>
           </div>
 
           {/* Tabs */}
