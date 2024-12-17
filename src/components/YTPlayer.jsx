@@ -231,8 +231,8 @@ const [duration, setDuration] = useState(0);
         const imagesToPreload = [
           data.imageSrc,
           data.authorImageSrc,
-          "/images/bg.png",
-          "/images/bg.png" // Preload video as well
+          "/images/yt.png",
+          "/images/logo.png" // Preload video as well
         ].filter(Boolean);
 
         await preloadImages(imagesToPreload);
