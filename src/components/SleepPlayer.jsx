@@ -781,7 +781,7 @@ const [duration, setDuration] = useState(0);
   ];
 
   return (
-    <div className="flex items-center justify-center h-screen bg-[#000] p-4">
+    <div className="flex items-center justify-center h-screen bg-[#060f1c] p-4">
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
