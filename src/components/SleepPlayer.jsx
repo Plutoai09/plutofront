@@ -204,7 +204,7 @@ const [duration, setDuration] = useState(0);
         // Update the bookName state if it changed
         console.log(updatedBookName)
         console.log(name)
-        const response = await fetch("https://contractus.co.in/api/audiobook", {
+        const response = await fetch("http://127.0.0.1:5000/api/audiobook", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -232,6 +232,8 @@ const [duration, setDuration] = useState(0);
           data.imageSrc,
           data.authorImageSrc,
           "/images/bg.png",
+           "/images/sleep.jpg",
+           "/images/star.webp",
           "/images/bg.png" // Preload video as well
         ].filter(Boolean);
 
@@ -779,25 +781,23 @@ const [duration, setDuration] = useState(0);
   ];
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 p-4">
+    <div className="flex items-center justify-center h-screen bg-[#0a192f] p-4">
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
-        <div className="w-full h-full max-h-[900px] sm:max-w-[375px] bg-white rounded-[40px] shadow-xl overflow-hidden flex flex-col mb-6 relative">
+        <div className="w-full h-full max-h-[900px] sm:max-w-[375px] bg-[#0a192f] rounded-[40px] shadow-xl overflow-hidden flex flex-col mb-6 relative">
           {/* Author Image - Positioned above book image */}
           <div
             className={`absolute top-4 left-1/2 transform -translate-x-1/2 ${
               !isModalOpen ? "z-10" : ""
             }`}
           >
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20">
-
-             
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20">
               {isAnswerPlaying &&
                 rippleElements.map((ripple, index) => (
                   <div
                     key={index}
-                    className="absolute rounded-full border border-blue-300"
+                    className="absolute rounded-full border border-[#64ffda]"
                     style={{
                       animation: `ripple ${ripple.duration} ease-out ${ripple.delay} infinite`,
                       width: "120%",
@@ -815,271 +815,219 @@ const [duration, setDuration] = useState(0);
           {/* Book Image Section - Adjusted height */}
           <div className="relative w-full pt-[30vh]">
             <div className="absolute inset-0">
-              <div
-                className={`absolute inset-0 w-full h-full transition-all duration-300 ${
-                  isAnswerPlaying
-                    ? "bg-gradient-to-b from-blue-600 to-blue-800 filter blur-sm"
-                    : ""
+              <img 
+                src="/images/star.webp" 
+                alt="Space Background" 
+                className={`absolute inset-0 w-full h-full object-cover opacity-100 transition-all duration-300 ${
+                  isAnswerPlaying ? "filter blur-sm" : ""
                 }`}
               />
-            <video
-  autoPlay
-  loop
-  muted
-  playsInline
-  preload="auto"
-  poster="/images/yt.png"  // Add a poster image that looks similar to the video
-  className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 ${
-    isAnswerPlaying ? "filter blur-sm" : ""
-  }`}
->
-  <source src="/videos/b.mp4" type="video/mp4" />
-  <source src="/videos/b.webm" type="video/webm" /> 
-  Your browser does not support the video tag.
-</video>
-              <div
-                className={`absolute inset-0 bg-black transition-opacity duration-300 ${
-                  isAnswerPlaying ? "opacity-30" : "opacity-0"
-                }`}
-              />
+ 
             </div>
           </div>
-
-          {/* Book Info Card - Overlapping the image */}
-          {/* <div className={`relative -mt-10 px-6 ${!isModalOpen ? "z-10" : ""}`}>
-            <div className="bg-white rounded-[20px] p-4 shadow-lg">
-              <h2 className="text-lg sm:text-xl font-bold text-center text-gray-800 mb-1">
-                Art of Conversation
-              </h2>
-              <p className="text-sm sm:text-base text-center text-gray-600" style={{ marginBottom: "9px" }}>
-  Interactive Audiobook
-</p>
-
-
-<div className="flex justify-center mb-3">
-              <button
-     onClick={() =>
-      (window.location.href = "https://www.delphi.ai/pluto/call")
-    }
-                className="bg-[#0e2a57] text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-blue-600 transition-colors"              >
-                <Phone size={18} />
-                <span className="text-sm">Talk & Learn</span>
-              </button>
-            </div>
-            </div>
-          </div>
-
-      */}
 
           {/* Controls Section */}
           <div className="px-2 mt-4">
-  <div className="flex justify-between items-center">
-    <h2 className="text-lg font-semibold text-gray-800">Calm by Pluto</h2>
-    <div 
-      onClick={() => window.location.href = "https://wa.link/tzl6b6"}
-      className="cursor-pointer px-2 py-1 rounded-full flex items-center justify-center"
-      style={{ backgroundColor: '#002244' }}
-    >
-      <span className="text-[10px] text-white">Report bug</span>
-    </div>
-  </div>
-  <p className="text-sm text-gray-500">Interactive Audiobook</p>
-</div>
-
-{/* Tabs */}
-<div className="flex border-b mt-4">
-  <button
-    className={`flex-1 py-2 text-sm font-medium ${
-      activeTab === 'controls'
-        ? 'text-blue-600 border-b-2 border-blue-600'
-        : 'text-gray-500'
-    }`}
-    onClick={() => setActiveTab('controls')}
-  >
-    Controls
-  </button>
-  <button
-    className={`flex-1 py-2 text-sm font-medium ${
-      activeTab === 'chapters'
-        ? 'text-blue-600 border-b-2 border-blue-600'
-        : 'text-gray-500'
-    }`}
-    onClick={() => setActiveTab('chapters')}
-  >
-    Chapters
-  </button>
- 
-</div>
-
-{/* Tab Content */}
- {activeTab === 'controls' && (
-    <div className="p-4 h-[65vh] overflow-y-auto">
-      <div className="text-left mb-4 mt-[2vh]">
-        <p className="text-sm text-gray-700 leading-relaxed">
-          Chapter: 
-          <span className="text-black font-semibold ml-2">
-            {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
-          </span>
-        </p>
-      </div>
-    
-      {isChapterLoading ? (
-        <div className="flex flex-col items-center justify-center space-y-4 mt-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"/>
-          <p className="text-xs text-gray-600">Loading chapter, no compromise with audio quality...</p>
-
-        </div>
-      ) : (
-        <>
-     
-
-     <div className="flex items-center mt-[3vh]">
-      <span className="text-xs text-gray-500 w-12 text-right">
-        {formatTime(currentTime)}
-      </span>
-      
-      <div
-        ref={progressBarRef}
-        className="flex-grow mx-2 h-3 bg-gray-300 rounded-full cursor-pointer relative"
-        onMouseDown={handleProgressBarInteraction}
-        onTouchStart={handleProgressBarInteraction}
-      >
-        <div
-          className="absolute top-0 left-0 h-3 bg-blue-500 rounded-full"
-          style={{ width: `${(currentTime / duration) * 100}%` }}
-        />
-        <div
-          className="absolute left-0 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform hover:scale-110"
-          style={{
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            left: `${(currentTime / duration) * 100}%`,
-            cursor: 'pointer',
-          }}
-        />
-      </div>
-      
-      <span className="text-xs text-gray-500 w-12 text-left">
-        {formatTime(duration)}
-      </span>
-    </div>
-
-
-          <div className="flex justify-center items-center space-x-16 mb-1 mt-4">
-            <div className="flex flex-col items-center">
-              <SkipBack 
-                size={16}
-                className={`${currentChapter === 0 ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600 cursor-pointer'} mb-2`}
-                onClick={currentChapter === 0 ? null : handlePreviousChapter}
-              />
-              <span className="text-[9px] text-gray-500">Previous</span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <button 
-                onClick={togglePlayPause}
-                disabled={isChapterLoading}
-                className={`w-12 h-12 bg-white rounded-full flex items-center justify-center text-black shadow-md transition-shadow mb-2 border-2 border-gray-300 ${
-                  !isChapterLoading ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'
-                }`}
+        
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-white">Calm by Pluto</h2>
+              <div 
+                onClick={() => window.location.href = "https://wa.link/tzl6b6"}
+                className="cursor-pointer px-2 py-1 rounded-full flex items-center justify-center bg-[#1d3557]"
               >
-                {isPlaying ? (
-                  <Pause size={18} fill="black"/>
-                ) : (
-                  <Play size={18} fill="black"/>
-                )}
-              </button>
-              <span className="text-[11px] text-gray-500">Play</span>
+                <span className="text-[10px] text-white">Report bug</span>
+              </div>
             </div>
-
-            <div className="flex flex-col items-center">
-              <SkipForward
-                size={16}
-                className={`${currentChapter >= chapters.length - 1 ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600 cursor-pointer'} mb-2`}
-                onClick={currentChapter >= chapters.length - 1 ? null : handleNextChapter}
-              />
-              <span className="text-[9px] text-gray-500">Next</span>
-            </div>
+            <p className="text-sm text-gray-300">Interactive Audiobook</p>
           </div>
 
-       
-        </>
-      )}
-    </div>
-  )}
+          {/* Tabs */}
+          <div className="flex border-b border-gray-700 mt-4">
+            <button
+              className={`flex-1 py-2 text-sm font-medium ${
+                activeTab === 'controls'
+                  ? 'text-[#64ffda] border-b-2 border-[#64ffda]'
+                  : 'text-gray-400'
+              }`}
+              onClick={() => setActiveTab('controls')}
+            >
+              Controls
+            </button>
+            <button
+              className={`flex-1 py-2 text-sm font-medium ${
+                activeTab === 'chapters'
+                  ? 'text-[#64ffda] border-b-2 border-[#64ffda]'
+                  : 'text-gray-400'
+              }`}
+              onClick={() => setActiveTab('chapters')}
+            >
+              Chapters
+            </button>
+          </div>
 
-{activeTab === 'chapters' && (
-        <div className="p-4 h-[65vh] overflow-y-auto custom-scrollbar">
-          {(() => {
-            // Get the appropriate filter lists based on persona
-            const { listA, listB } = getChapterFilterLists(persona);
-    
-            return chapters
-              .map((chapter, originalIndex) => ({ chapter, originalIndex }))
-              .filter(({ originalIndex }) => !listA.includes(originalIndex))
-              .map(({ chapter, originalIndex }, filteredIndex) => {
-                // Determine which chapter to play
-                const chapterToPlay = listB.includes(filteredIndex + 1) 
-                  ? originalIndex - 1 
-                  : originalIndex;
-    
-                return (
-                  <div
-                    key={originalIndex}
-                    onClick={() => !isChapterLoading && playChapter(chapterToPlay)}
-                    className={`py-2 sm:py-2.5 border-b border-gray-200 first:border-t ${
-                      currentChapter === originalIndex ? "bg-gray-50" : ""
-                    } cursor-pointer transition-colors ${isChapterLoading ? "opacity-50 pointer-events-none" : ""}`}
-                  >
-                    <div className="px-2 flex justify-between items-center">
-                      <div>
-                        <p className="text-xs text-gray-400 mb-0.5">
-                          Chapter {filteredIndex + 1}
-                        </p>
-                        <p className={`text-sm text-gray-900 ${
-                          currentChapter === originalIndex ? "font-bold" : ""
-                        }`}>
-                          {chapter.title || `Chapter ${filteredIndex + 1}`}
-                        </p>
-                      </div>
-                      {isChapterLoading && currentChapter === originalIndex && (
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"/>
-                      )}
+          {/* Tab Content */}
+          {activeTab === 'controls' && (
+            <div className="p-4 h-[65vh] overflow-y-auto">
+              <div className="text-left mb-4 mt-[2vh]">
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Chapter: 
+                  <span className="text-white font-semibold ml-2">
+                    {chapters[currentChapter]?.title || `Chapter ${currentChapter + 1}`}
+                  </span>
+                </p>
+              </div>
+            
+              {isChapterLoading ? (
+                <div className="flex flex-col items-center justify-center space-y-4 mt-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#64ffda] border-t-transparent"/>
+                  <p className="text-xs text-gray-400">Loading chapter, no compromise with audio quality...</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center mt-[3vh]">
+                    <span className="text-xs text-gray-400 w-12 text-right">
+                      {formatTime(currentTime)}
+                    </span>
+                    
+                    <div
+                      ref={progressBarRef}
+                      className="flex-grow mx-2 h-3 bg-gray-700 rounded-full cursor-pointer relative"
+                      onMouseDown={handleProgressBarInteraction}
+                      onTouchStart={handleProgressBarInteraction}
+                    >
+                      <div
+                        className="absolute top-0 left-0 h-3 bg-[#64ffda] rounded-full"
+                        style={{ width: `${(currentTime / duration) * 100}%` }}
+                      />
+                      <div
+                        className="absolute left-0 w-4 h-4 bg-[#64ffda] rounded-full shadow-md transform transition-transform hover:scale-110"
+                        style={{
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          left: `${(currentTime / duration) * 100}%`,
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </div>
+                    
+                    <span className="text-xs text-gray-400 w-12 text-left">
+                      {formatTime(duration)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-center items-center space-x-16 mb-1 mt-4">
+                    <div className="flex flex-col items-center">
+                      <SkipBack 
+                        size={16}
+                        className={`${currentChapter === 0 ? 'text-gray-600' : 'text-gray-300 hover:text-white cursor-pointer'} mb-2`}
+                        onClick={currentChapter === 0 ? null : handlePreviousChapter}
+                      />
+                      <span className="text-[9px] text-gray-400">Previous</span>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <button 
+                        onClick={togglePlayPause}
+                        disabled={isChapterLoading}
+                        className={`w-12 h-12 bg-[#1d3557] rounded-full flex items-center justify-center text-white shadow-md transition-shadow mb-2 border-2 border-[#64ffda] ${
+                          !isChapterLoading ? 'hover:shadow-lg' : 'opacity-50 cursor-not-allowed'
+                        }`}
+                      >
+                        {isPlaying ? (
+                          <Pause size={18} fill="white"/>
+                        ) : (
+                          <Play size={18} fill="white"/>
+                        )}
+                      </button>
+                      <span className="text-[11px] text-gray-400">Play</span>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <SkipForward
+                        size={16}
+                        className={`${currentChapter >= chapters.length - 1 ? 'text-gray-600' : 'text-gray-300 hover:text-white cursor-pointer'} mb-2`}
+                        onClick={currentChapter >= chapters.length - 1 ? null : handleNextChapter}
+                      />
+                      <span className="text-[9px] text-gray-400">Next</span>
                     </div>
                   </div>
-                );
-              })
-          })()}
-             </div>
-  )};
+                </>
+              )}
+            </div>
+          )}
 
-
-
-
-     {/* Chapters List - Adjusted height */}
-
-
-<style jsx>{`
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(0,0,0,0.2);
-    border-radius: 10px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0,0,0,0.3);
-  }
-`}</style>
-
-        </div>
-      )}
-
-    </div>
-  );
-};
-
-export default SleepPlayer;
+          {activeTab === 'chapters' && (
+            <div className="p-4 h-[65vh] overflow-y-auto custom-scrollbar">
+              {(() => {
+                const { listA, listB } = getChapterFilterLists(persona);
+        
+                return chapters
+                  .map((chapter, originalIndex) => ({ chapter, originalIndex }))
+                  .filter(({ originalIndex }) => !listA.includes(originalIndex))
+                  .map(({ chapter, originalIndex }, filteredIndex) => {
+                    const chapterToPlay = listB.includes(filteredIndex + 1) 
+                      ? originalIndex - 1 
+                      : originalIndex;
+        
+                    return (
+                      <div
+                      key={originalIndex}
+                      onClick={() => !isChapterLoading && playChapter(chapterToPlay)}
+                      className={`py-2 sm:py-2.5 border-b border-gray-700 first:border-t ${
+                        currentChapter === originalIndex ? "bg-[#1d2536]" : ""
+                      } cursor-pointer transition-colors ${isChapterLoading ? "opacity-50 pointer-events-none" : ""}`}
+                    >
+                      <div className="px-2 flex justify-between items-center">
+                        <div>
+                          <p className="text-xs text-gray-500 mb-0.5">
+                            Chapter {filteredIndex + 1}
+                          </p>
+                          <p className={`text-sm text-white ${
+                            currentChapter === originalIndex ? "font-bold" : ""
+                          }`}>
+                            {chapter.title || `Chapter ${filteredIndex + 1}`}
+                          </p>
+                        </div>
+                        {isChapterLoading && currentChapter === originalIndex && (
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#64ffda] border-t-transparent"/>
+                        )}
+                      </div>
+                    </div>
+                      );
+                    })
+                })()}
+              </div>
+            )}
+      
+            <style jsx>{`
+              .custom-scrollbar::-webkit-scrollbar {
+                width: 6px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb {
+                background-color: rgba(100,255,218,0.2);
+                border-radius: 10px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(100,255,218,0.3);
+              }
+      
+              @keyframes ripple {
+                0% {
+                  transform: translate(-50%, -50%) scale(0);
+                  opacity: 0.7;
+                }
+                100% {
+                  transform: translate(-50%, -50%) scale(2);
+                  opacity: 0;
+                }
+              }
+            `}</style>
+          </div>
+        )}
+      </div>
+      );
+    };
+    export default SleepPlayer;

@@ -14,6 +14,8 @@ import Contact from "./components/contact";
 import Refund from "./components/refund";
 import YTPlayer from "./components/YTPlayer";
 import Loginyt from "./components/Loginyt";
+import SleepPlayer from "./components/SleepPlayer";
+import LoginSleep from "./components/LoginSleep";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/refund" element={<Refund />} />
         <Route path="/youtube" element={<YTPlayer />} />
+        <Route path="/deepsleep" element={<SleepPlayer />} />
+        <Route path="/join" element={<LoginSleep />} />
       </Routes>
     </Router>
   );
