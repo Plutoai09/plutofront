@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Lock, Mail, HeadphonesIcon, Loader2 } from "lucide-react";
 import OnboardingFlow from './OnboardingFlow';
 import YTplayer from './YTPlayer';
+import axios from 'axios';
+
+
 
 
 const Loginyt = () => {
@@ -61,8 +64,9 @@ const Loginyt = () => {
       localStorage.setItem("plutoytemail", email);
 
       // Set loading state and navigate to loading screen
-      setIsLoading(true);
       submitToAirtable();
+      setIsLoading(true);
+     
     } catch (error) {
       console.error("Submission error:", error);
       setIsSubmitting(false);
