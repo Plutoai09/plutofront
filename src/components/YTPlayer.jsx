@@ -287,7 +287,7 @@ const [duration, setDuration] = useState(0);
         if (currentChapter < chapters.length - 1) {
           try {
             // Get email from localStorage for analytics
-            const email = localStorage.getItem('plutoemail') || 'anonymous';
+            const email = localStorage.getItem('plutoytemail') || 'anonymous';
              
             // Log the chapter transition
             await fetch('https://contractus.co.in/event', {
@@ -658,7 +658,7 @@ const [duration, setDuration] = useState(0);
     
     try {
       // Non-blocking event logging
-      const email = localStorage.getItem('plutoemail') || 'anonymous';
+      const email = localStorage.getItem('plutoytemail') || 'anonymous';
       fetch('https://contractus.co.in/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

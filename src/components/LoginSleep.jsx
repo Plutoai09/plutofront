@@ -93,7 +93,7 @@ const LoginSleep = () => {
               First: 'dummy',
               Second: 'dummy',
               Third: 'dummy',
-              persona: 'Youtube'
+              persona: 'Deep Sleep'
             }
           }
         ]

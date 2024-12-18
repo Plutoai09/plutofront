@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./ui/ripple.css";
 import { useParams, useNavigate } from "react-router-dom";
 import ElevenLabsConversationyt from "./ElevenLabsConversationyt.jsx";
-
+import axios from 'axios';
 import {
   Rewind,
   FastForward,
@@ -112,7 +112,7 @@ const [duration, setDuration] = useState(0);
 
   const getFullAudioUrl = (path) => {
     console.log(path)
-    const baseUrl = "https://contractus.co.in/";
+    const baseUrl = "https://contractus.co.in//";
     return `${baseUrl}${path}`;
   };
 
@@ -212,6 +212,23 @@ const [duration, setDuration] = useState(0);
           body: JSON.stringify({ name, updatedBookName }),
         });
 
+
+        const audioBooks = [
+          { title: 'Journey Through the Frozen Rails', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter0.mp3' },
+          { title: 'New Zealand Highlands', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter1.mp3' },
+          { title: 'Blue Gold', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter2.mp3' },
+          { title: 'Greek Story', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter3.mp3' },
+          { title: 'Night in Paris', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter4.mp3' },
+          { title: 'Space Journey', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter5.mp3' },
+          { title: 'Travel & Dream', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter6.mp3' },
+          { title: 'Twilight Town', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter7.mp3' },
+          { title: 'Viking Village', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter8.mp3' },
+          { title: 'End of the Day', url: 'https://storage.cloud.google.com/plutoai/user_sleep_chapter9.mp3' },
+        ];
+        
+
+
+
         if (!response.ok) {
           throw new Error("Failed to fetch audiobook");
         }
@@ -243,7 +260,7 @@ const [duration, setDuration] = useState(0);
         setAuthorImageSrc(data.authorImageSrc);
         setAuthorName(data.authorName);
      
-        setChapters(data.chapters);
+        setChapters(audioBooks);
         setError("");
       } catch (error) {
         console.error("Error fetching audiobook:", error);
@@ -289,19 +306,10 @@ const [duration, setDuration] = useState(0);
         if (currentChapter < chapters.length - 1) {
           try {
             // Get email from localStorage for analytics
-            const email = localStorage.getItem('plutoemail') || 'anonymous';
+            const email = localStorage.getItem('plutoytemail') || 'anonymous';
              
             // Log the chapter transition
-            await fetch('https://contractus.co.in/event', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: email,
-                Chapter: currentChapter + 1
-              })
-            });
+            submitToAirtable();
 
             console.log(`Chapter ${currentChapter} ended, auto-playing chapter ${currentChapter + 1}`);
             
@@ -384,6 +392,97 @@ const [duration, setDuration] = useState(0);
         });
     }
   }, [answerAudioSrc]);
+
+
+
+
+
+
+  const submitToAirtable = async () => {
+    try {
+      // Airtable API details (replace with your actual values)
+      const AIRTABLE_API_KEY = 'patprnTG99hS6uQWv.b752084329e8723bc5bb5d8ff5abb7850004127579b197cc7ed4236e565f3305';
+      const AIRTABLE_BASE_ID = 'appxGg8YmAsauJHIV';
+      const AIRTABLE_TABLE_ID = 'Table%201';
+      const sleepemail = localStorage.getItem('plutoytemail') || 'anonymous';
+      const time =new Date().toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        dateStyle: 'full',
+        timeStyle: 'long'
+      });
+      
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
+
+      const response = await axios.post(url, {
+        records: [
+          {
+            fields: {
+              email: sleepemail,
+              Chapter: currentChapter+1,
+              Date:time
+            }
+          }
+        ]
+      }, {
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Submission successful:', response.data);
+      // Additional success handling (e.g., navigation, showing success message)
+    } catch (error) {
+      console.error('Error submitting to Airtable:', error);
+      
+    }
+  };
+
+
+  
+  const submitToAirtableB = async (index) => {
+    try {
+      // Airtable API details (replace with your actual values)
+      const AIRTABLE_API_KEY = 'patprnTG99hS6uQWv.b752084329e8723bc5bb5d8ff5abb7850004127579b197cc7ed4236e565f3305';
+      const AIRTABLE_BASE_ID = 'appxGg8YmAsauJHIV';
+      const AIRTABLE_TABLE_ID = 'Table%201';
+      const sleepemail = localStorage.getItem('plutoytemail') || 'anonymous';
+      const time =new Date().toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        dateStyle: 'full',
+        timeStyle: 'long'
+      });
+      
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
+
+      const response = await axios.post(url, {
+        records: [
+          {
+            fields: {
+              email: sleepemail,
+              Chapter: index,
+              Date:time
+            }
+          }
+        ]
+      }, {
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Submission successful:', response.data);
+      // Additional success handling (e.g., navigation, showing success message)
+    } catch (error) {
+      console.error('Error submitting to Airtable:', error);
+      
+    }
+  };
+
+
+
+
 
   const setupAudio = (url) => {
     if (answerAudioRef.current) {
@@ -660,12 +759,8 @@ const [duration, setDuration] = useState(0);
     
     try {
       // Non-blocking event logging
-      const email = localStorage.getItem('plutoemail') || 'anonymous';
-      fetch('https://contractus.co.in/event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, Chapter: index })
-      });
+      const email = localStorage.getItem('plutoytemail') || 'anonymous';
+      submitToAirtableB(index);
   
       // Stop current audio immediately
       if (audioElement) {
