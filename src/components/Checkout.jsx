@@ -195,7 +195,7 @@ const Checkout = () => {
   };
 
   const handleBack = () => {
-    window.location.href = 'https://getpluto.in/success';
+    window.location.href = 'https://getpluto.in/artofconverstion/payment';
   };
 
   const validateForm = () => {
